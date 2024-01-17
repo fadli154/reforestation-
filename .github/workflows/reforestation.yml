@@ -3,23 +3,23 @@ name: Commit cheat
 on:
   push:
     branches:
-      - main
+      - master
 
   schedule:
-    - cron: "0 1/4 * * *"
+    - cron: "* * * * *"
 
 jobs:
   auto_commit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Set global directory
         run: git config --global --add safe.directory /github/workspace
-      - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 1
 
-      - name: Modify last update
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update file
         run: |
           cat > LAST_UPDATED
           d=`date '+%Y-%m-%dT%H:%M:%SZ'`
@@ -27,14 +27,13 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.email "kitacingcong@gmail.com"
-          git config --local user.name "fadli154"
-          git add -A
-          git commit -m "Nothin g?"
+          git config --global user.name "fadli154"
+          git config --global user.email "kitacingcong@gmail.com"
+          git add .
+          git commit -m "There was nothing here."
 
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
           force: true
-          directory: "."
           github_token: ${{ secrets.GITHUB_TOKEN }}
