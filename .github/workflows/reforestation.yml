@@ -3,7 +3,7 @@ name: Commit cheat
 on:
   push:
     branches:
-      - master
+      - main
 
   schedule:
     - cron: "* * * * *"
